@@ -2,7 +2,10 @@ package com.gabrielnz.todolist.service;
 
 import com.gabrielnz.todolist.entity.Todo;
 import com.gabrielnz.todolist.repository.TodoRepository;
+import com.gabrielnz.todolist.service.exception.DataBaseException;
+import com.gabrielnz.todolist.service.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,9 @@ public class TodoService {
 
 
     public List<Todo> update(Long id, Todo todo) {
+        if(!todoRepository.existsById(id)){
+            throw new NotFoundException(id);
+        }
         Todo todoReference = todoRepository.getReferenceById(id);
         todoReference.setId(todo.getId());
         todoReference.setDone(todo.isDone());
@@ -36,7 +42,14 @@ public class TodoService {
     }
 
     public List<Todo> delete(Long id) {
-        todoRepository.deleteById(id);
+        try {
+            if (!todoRepository.existsById(id)) {
+                throw new NotFoundException(id);
+            }
+            todoRepository.deleteById(id);
+        }catch (DataIntegrityViolationException e){
+            throw new DataBaseException(e.getMessage());
+        }
         return list();
     }
 }
