@@ -1,6 +1,7 @@
 package com.gabrielnz.todolist.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Objects;
 
@@ -11,7 +12,9 @@ public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
     private String description;
     private boolean done;
     private int priority;
@@ -64,7 +67,7 @@ public class Todo {
         this.priority = priority;
     }
 
-    public Todo(){
+    public Todo() {
 
     }
 

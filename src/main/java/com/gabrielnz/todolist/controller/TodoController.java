@@ -2,6 +2,7 @@ package com.gabrielnz.todolist.controller;
 
 import com.gabrielnz.todolist.entity.Todo;
 import com.gabrielnz.todolist.service.TodoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class TodoController {
     }
 
     @PostMapping
-    public ResponseEntity<List<Todo>> create(@RequestBody Todo todo) {
+    public ResponseEntity<List<Todo>> create(@RequestBody @Valid Todo todo) {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(todo.getId()).toUri();
         return ResponseEntity.created(uri).body(todoService.create(todo));
     }
